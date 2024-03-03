@@ -13,6 +13,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
   - [ ] Support for streaming requests
 - [ ] Support for Single Sign-On through cookies
 - [ ] CSS modules injection into React Shadow
+- [ ] Support testing using Jest
 - and much more
 
 Additional Notes
