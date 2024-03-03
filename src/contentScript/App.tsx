@@ -1,9 +1,29 @@
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import reactLogo from "@assets/react.svg"
 import styles from "./App.css?inline"
+import { sendMessage } from "./messages/sendMessage"
 
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    sendMessage<undefined, number>({
+      type: "counter",
+      subType: "get",
+    }).then((previousCount?: number) => {
+      if (typeof previousCount === "number") {
+        setCount(previousCount)
+      }
+    })
+  }, [])
+  const handleClick = useCallback(() => {
+    setCount(count + 1)
+    sendMessage<number, undefined>({
+      type: "counter",
+      subType: "update",
+      data: count + 1,
+    })
+  }, [count])
 
   return (
     <>
@@ -21,9 +41,7 @@ function App() {
           <p className="card__content">
             Edit <code>src/App.tsx</code> and save to test HMR
           </p>
-          <button onClick={() => setCount((count) => count + 1)}>
-            count is {count}
-          </button>
+          <button onClick={handleClick}>count is {count}</button>
         </div>
       </div>
     </>
