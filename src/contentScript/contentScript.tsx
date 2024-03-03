@@ -1,0 +1,22 @@
+import { contentScriptDom } from "./constants";
+import { createShadowRoot } from "./utils/shadow";
+import styles from "./index.css?inline";
+import { createRoot } from "react-dom/client";
+import App from "./App";
+import { StrictMode } from "react";
+
+function initialiseContainer() {
+  // Initialise container if it's not present
+  const appContainer = document.createElement("chrome-extension-boilerplate");
+  appContainer.id = contentScriptDom;
+  const shadowRoot = createShadowRoot(appContainer, styles);
+  document.head.insertAdjacentElement("afterend", appContainer);
+  // Initialise React App
+  createRoot(shadowRoot).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}
+
+initialiseContainer();
