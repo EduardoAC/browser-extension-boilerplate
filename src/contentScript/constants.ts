@@ -1,2 +1,2 @@
-export const contentScriptDom = "content-script-wrapper";
-export const appRootId = "shadow-root";
+export const contentScriptDom = "content-script-wrapper"
+export const appRootId = "shadow-root"
