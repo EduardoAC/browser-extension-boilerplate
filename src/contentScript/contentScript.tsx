@@ -10,6 +10,7 @@ function initialiseContainer() {
   const appContainer = document.createElement("chrome-extension-boilerplate");
   appContainer.id = contentScriptDom;
   const shadowRoot = createShadowRoot(appContainer, styles);
+  // Mitigate any styles targeting body by injecting element as html child
   document.head.insertAdjacentElement("afterend", appContainer);
   // Initialise React App
   createRoot(shadowRoot).render(
