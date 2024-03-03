@@ -1,38 +1,24 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + Chrome extension + CXRJS plugin boilerplate
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository aims to provide a quick starting point for building Chrome extensions in React. Please note that this is a pre-alpha project, so exercise caution before forking it, as it is not yet ready for general use. If you find something useful, feel free to copy and reproduce it at your own discretion, but be aware that it will be at your own risk.
 
-Currently, two official plugins are available:
+Now that the disclosure is complete, this project aims to offer an easy way to create complex extensions with a simple fork, incorporating the following features:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- [x] Basic Message handling
+- [ ] Basic Error handling
+- [ ] Advance API service, including the following features
+  - [ ] Concurrency handler with Error handler
+  - [ ] Support for authentication through headers
+  - [ ] Wrapper around fetch method to simplify usage GET, PUT, POST and DELETE
+  - [ ] Support for streaming requests
+- [ ] Support for Single Sign-On through cookies
+- [ ] CSS modules injection into React Shadow
+- and much more
 
-## Expanding the ESLint configuration
+Additional Notes
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-
-Notes
-
-- Setup Vite
-- Setup deployment and HMR in extension
-- Load React in Content Script considering there is not index.html
-- Introduce Shadow dom and styles for the component
-- Global styles to use within every page
+- [x] Setup Vite
+- [x] Setup deployment and HMR in extension - using CXRJS
+- [x] Load React in Content Script considering there is not index.html
+- [x] Introduce Shadow dom and styles for the component
+- [ ] Global styles to use within every page (Not required)
