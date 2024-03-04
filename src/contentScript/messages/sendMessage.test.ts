@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as chrome from "vitest-chrome"
 
 import { sendMessage } from "./sendMessage"
 

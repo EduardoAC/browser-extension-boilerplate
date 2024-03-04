@@ -21,7 +21,7 @@ export default defineConfig({
     include: ["./**/*.test.ts", "./**/*.test.tsx"],
     globals: true,
     environment: "jsdom",
-    setupFiles: ["src/setupTests.ts"],
+    setupFiles: ["./setupTests.ts"],
   },
   optimizeDeps: {
     esbuildOptions: {
