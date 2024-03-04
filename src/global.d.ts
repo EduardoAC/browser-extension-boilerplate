@@ -15,5 +15,3 @@ interface MessageResponse<T = MessageDataResponseType> {
 type SendResponseCallback = (response?: MessageResponse) => void
 type MessageDataType = number
 type MessageDataResponseType = unknown
-
-declare module "vitest-chrome/lib/index.esm.js"
