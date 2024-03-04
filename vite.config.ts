@@ -1,4 +1,4 @@
-import { defineConfig } from "vite"
+import { defineConfig } from "vitest/config"
 import { resolve } from "path"
 import react from "@vitejs/plugin-react"
 import { crx } from "@crxjs/vite-plugin"
@@ -16,9 +16,16 @@ export default defineConfig({
       "@assets": assetsDir,
     },
   },
-  // optimizeDeps: {
-  //   esbuildOptions: {
-  //     sourcemap: "inline",
-  //   },
-  // },
+  test: {
+    // some paths to the files that are test files
+    include: ["./**/*.test.ts", "./**/*.test.tsx"],
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./setupTests.ts"],
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      sourcemap: "inline",
+    },
+  },
 })
