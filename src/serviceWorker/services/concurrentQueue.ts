@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 type OnGoingRequests = { [key in string]: Function[] }
 
 let onGoingRequests: OnGoingRequests = {}
@@ -19,7 +20,10 @@ export function waitUntilOnGoingRequestFinish(url: string) {
 }
 
 export function notifyOnGoingRequestQueued(url: string, response: Response) {
-  if (typeof onGoingRequests[url] !== "undefined" && onGoingRequests[url] > 0) {
+  if (
+    typeof onGoingRequests[url] !== "undefined" &&
+    onGoingRequests[url].length > 0
+  ) {
     onGoingRequests[url].forEach((resolve) => {
       resolve(response.clone())
     })

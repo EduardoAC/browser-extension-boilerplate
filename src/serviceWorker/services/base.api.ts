@@ -7,14 +7,21 @@ import {
 } from "./concurrentQueue"
 
 type Parameter = string[] | string | number | boolean | null
+
 interface QueryParameters {
   [key: string]: Parameter
 }
+
 interface MappingAPIParam {
   apiName: string
   valueMapFn(param: Parameter): Parameter
   removeEmpty: boolean
 }
+
+interface Headers {
+  [key: string]: Omit<Parameter, "string[]">
+}
+
 export class BaseApi {
   protected defaultOptions = {}
   constructor() {}
@@ -34,7 +41,7 @@ export class BaseApi {
   }
   protected async concurrentRequests(
     requestUrl: string,
-    headers: unknown,
+    headers: Headers,
     reqOptions: QueryParameters
   ) {
     let response: Response
@@ -54,7 +61,7 @@ export class BaseApi {
   protected async request(
     endpoint: string,
     queryParams: QueryParameters,
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     const { concurrentQueue, ...customOptions } = options
@@ -100,7 +107,7 @@ export class BaseApi {
   get(
     endpoint: string,
     queryParams: QueryParameters,
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     return this.request(endpoint, queryParams, headers, options)
@@ -108,7 +115,7 @@ export class BaseApi {
   put(
     endpoint: string,
     queryParams: QueryParameters,
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     options = { ...options, method: "PUT" }
@@ -118,7 +125,7 @@ export class BaseApi {
     endpoint: string,
     queryParams: QueryParameters,
     data: unknown = {},
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     options = { ...options, method: "POST", body: JSON.stringify(data) }
@@ -128,7 +135,7 @@ export class BaseApi {
     endpoint: string,
     queryParams: QueryParameters,
     data: unknown = {},
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     options = { ...options, method: "PATCH", body: JSON.stringify(data) }
@@ -137,7 +144,7 @@ export class BaseApi {
   delete(
     endpoint: string,
     queryParams: QueryParameters,
-    headers: unknown,
+    headers: Headers,
     options: QueryParameters = { concurrentQueue: false }
   ) {
     options = { ...options, method: "DELETE" }
