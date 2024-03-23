@@ -1,4 +1,4 @@
-import { ApiError } from "./apiError"
+import { ApiError } from "./ApiError.class"
 import {
   hasOnGoingRequests,
   lockResourceByUrl,
@@ -97,6 +97,7 @@ export class BaseApi {
         status: response.status,
         data: data,
       })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error instanceof ApiError) {
         return Promise.reject(error)
