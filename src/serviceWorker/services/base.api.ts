@@ -204,7 +204,7 @@ export class BaseApi {
     // const accessToken = getAccessToken()
     console.log(requestOptions)
     return {
-      Authorization: "",
+      Authorization: "Auth",
     }
   }
 }

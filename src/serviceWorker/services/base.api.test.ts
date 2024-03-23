@@ -21,14 +21,24 @@ describe("Base Api", () => {
       baseApiInstance.get(requestUrl, {}, { test: "header" })
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
-          Authorization: "",
+          Authorization: "Auth",
           source: "browser-extension",
           test: "header",
         },
       })
     })
+    it("Authorization should be present on headers", () => {
+      fetchMocker.mockResponseOnce(JSON.stringify({ data: "12345" }))
+      const baseApiInstance = new BaseApi()
+      baseApiInstance.get(requestUrl, {}, {})
+      expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
+        headers: {
+          Authorization: "Auth",
+          source: "browser-extension",
+        },
+      })
+    })
   })
-  // describe("Authorisation", () => {})
   // describe("Request methods", () => {})
   // describe("Concurrency queue", () => {})
   // describe("Options", () => {})
