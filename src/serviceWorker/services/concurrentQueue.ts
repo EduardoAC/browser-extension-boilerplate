@@ -1,36 +1,41 @@
 /* eslint-disable @typescript-eslint/ban-types */
-type OnGoingRequests = { [key in string]: Function[] }
+export class ConcurrentRequestQueue {
+  private concurrentQueueMap: Map<string, Function[]>
 
-let onGoingRequests: OnGoingRequests = {}
-export function hasOnGoingRequests(url: string) {
-  return typeof onGoingRequests[url] !== "undefined"
-}
-
-export function lockResourceByUrl(url: string) {
-  if (!onGoingRequests[url]) {
-    onGoingRequests[url] = []
+  constructor() {
+    this.concurrentQueueMap = new Map<string, Function[]>()
   }
-}
 
-export function waitUntilOnGoingRequestFinish(url: string) {
-  const waitForRequestPromise = new Promise<Response>((resolve) => {
-    onGoingRequests[url].push(resolve)
-  })
-  return waitForRequestPromise
-}
+  hasOnGoingRequests(url: string): boolean {
+    return this.concurrentQueueMap.has(url)
+  }
 
-export function notifyOnGoingRequestQueued(url: string, response: Response) {
-  if (
-    typeof onGoingRequests[url] !== "undefined" &&
-    onGoingRequests[url].length > 0
-  ) {
-    onGoingRequests[url].forEach((resolve) => {
-      resolve(response.clone())
+  lockResourceByUrl(url: string): void {
+    if (this.hasOnGoingRequests(url)) {
+      throw new Error(`Resource already locked for ${url}`)
+    }
+    this.concurrentQueueMap.set(url, [])
+  }
+
+  async waitUntilOnGoingRequestFinish(url: string): Promise<Response> {
+    return new Promise<Response>((resolve) => {
+      const currentQueueRequests = this.concurrentQueueMap.get(url) ?? []
+      currentQueueRequests.push(resolve)
+      this.concurrentQueueMap.set(url, currentQueueRequests)
     })
   }
-  delete onGoingRequests[url]
-}
 
-export function clearOnGoingRequestQueue() {
-  onGoingRequests = {}
+  notifyOnGoingRequestQueued(url: string, response: Response): void {
+    const currentQueueRequests = this.concurrentQueueMap.get(url)
+    if (currentQueueRequests && currentQueueRequests.length > 0) {
+      currentQueueRequests.forEach((resolve) => {
+        resolve(response.clone())
+      })
+    }
+    this.concurrentQueueMap.delete(url)
+  }
+
+  clearOnGoingRequestQueue(): void {
+    this.concurrentQueueMap.clear()
+  }
 }
