@@ -19,7 +19,7 @@ describe("Base Api", () => {
     it("Headers provided are present in the API request", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ data: "12345" }))
       const baseApiInstance = new BaseApi()
-      baseApiInstance.get(requestUrl, {}, { test: "header" })
+      baseApiInstance.get(requestUrl, { headers: { test: "header" } })
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
           Authorization: "Auth",
@@ -44,7 +44,7 @@ describe("Base Api", () => {
     it("should provide no method when sending a GET request", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ data: "12345" }))
       const baseApiInstance = new BaseApi()
-      baseApiInstance.get(requestUrl, {}, {})
+      baseApiInstance.get(requestUrl)
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
           Authorization: "Auth",
@@ -56,7 +56,7 @@ describe("Base Api", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ success: true }))
       const baseApiInstance = new BaseApi()
       const body = { data: "to Store" }
-      baseApiInstance.post(requestUrl, {}, {}, body)
+      baseApiInstance.post(requestUrl, { body })
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
           Authorization: "Auth",
@@ -70,7 +70,7 @@ describe("Base Api", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ success: true }))
       const baseApiInstance = new BaseApi()
       const body = { id: 1, user: "test" }
-      baseApiInstance.put(requestUrl, {}, {}, body)
+      baseApiInstance.put(requestUrl, { body })
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
           Authorization: "Auth",
@@ -84,7 +84,7 @@ describe("Base Api", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ success: true }))
       const baseApiInstance = new BaseApi()
       const body = { id: 1, user: "test" }
-      baseApiInstance.patch(requestUrl, {}, {}, body)
+      baseApiInstance.patch(requestUrl, { body })
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/`, {
         headers: {
           Authorization: "Auth",
@@ -97,7 +97,7 @@ describe("Base Api", () => {
     it("should provide DELETE method when sending a DELETE request", () => {
       fetchMocker.mockResponseOnce(JSON.stringify({ success: true }))
       const baseApiInstance = new BaseApi()
-      baseApiInstance.delete(`${requestUrl}/id/1`, {}, {})
+      baseApiInstance.delete(`${requestUrl}/id/1`)
       expect(fetchMocker).toBeCalledWith(`${requestUrl}/id/1`, {
         headers: {
           Authorization: "Auth",
@@ -122,18 +122,12 @@ describe("Base Api", () => {
         async () => await emulateConcurrencyPromise
       )
       const baseApiInstance = new BaseApi()
-      const firstRequestPromise = baseApiInstance.get(
-        requestUrl,
-        {},
-        {},
-        { concurrentQueue: true }
-      )
-      const secondRequestPromise = baseApiInstance.get(
-        requestUrl,
-        {},
-        {},
-        { concurrentQueue: true }
-      )
+      const firstRequestPromise = baseApiInstance.get(requestUrl, {
+        options: { concurrentQueue: true },
+      })
+      const secondRequestPromise = baseApiInstance.get(requestUrl, {
+        options: { concurrentQueue: true },
+      })
       resolveRequests(sharedResponse)
       // Wait for both promises to resolve before checking the output
       const [firstResponse, secondResponse] = await Promise.all([
