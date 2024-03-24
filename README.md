@@ -16,10 +16,19 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 - [x] Support testing using Vitest
 - and much more
 
-Additional Notes
+## Additional Notes
 
 - [x] Setup Vite
 - [x] Setup deployment and HMR in extension - using CXRJS
 - [x] Load React in Content Script considering there is not index.html
 - [x] Introduce Shadow dom and styles for the component
 - [ ] Global styles to use within every page (Not required)
+
+## Tech debt to address
+
+- [ ] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
+- [ ] Base.api.ts is a bit big and serve multiple purposes, revisit the file and consider extract functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit test it.
+- [ ] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
+- [ ] Base.api.ts is a bit big and serves multiple purposes
+  - [ ] Revisit the file and consider extracting functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit tested.
+  - [ ] Clear parameters part, it's not elegant to have to pass `{}` when we don't require additional query parameters and headers
