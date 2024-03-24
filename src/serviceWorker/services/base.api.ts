@@ -12,6 +12,10 @@ interface QueryParameters {
   [key: string]: Parameter
 }
 
+interface BaseAPIRequestOptions extends Partial<Request> {
+  concurrentQueue: boolean
+}
+
 interface MappingAPIParam {
   apiName: string
   valueMapFn(param: Parameter): Parameter
@@ -42,7 +46,7 @@ export class BaseApi {
   protected async concurrentRequests(
     requestUrl: string,
     headers: Headers,
-    reqOptions: QueryParameters
+    reqOptions: Partial<Request>
   ) {
     let response: Response
     if (!hasOnGoingRequests(requestUrl)) {
@@ -62,7 +66,7 @@ export class BaseApi {
     endpoint: string,
     queryParams: QueryParameters,
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
     const { concurrentQueue, ...customOptions } = options
     const requestOptions = { ...this.defaultOptions, ...customOptions }
@@ -109,7 +113,7 @@ export class BaseApi {
     endpoint: string,
     queryParams: QueryParameters,
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
     return this.request(endpoint, queryParams, headers, options)
   }
@@ -117,36 +121,52 @@ export class BaseApi {
     endpoint: string,
     queryParams: QueryParameters,
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    data: unknown,
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
-    options = { ...options, method: "PUT" }
+    options = {
+      ...options,
+      method: "PUT",
+      // Temporary cast conversion as RequestInfo doesn't accept strings as type
+      body: JSON.stringify(data) as unknown as ReadableStream<Uint8Array>,
+    }
     return this.request(endpoint, queryParams, headers, options)
   }
   post(
     endpoint: string,
     queryParams: QueryParameters,
-    data: unknown = {},
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    data: unknown,
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
-    options = { ...options, method: "POST", body: JSON.stringify(data) }
+    options = {
+      ...options,
+      method: "POST",
+      // Temporary cast conversion as RequestInfo doesn't accept strings as type
+      body: JSON.stringify(data) as unknown as ReadableStream<Uint8Array>,
+    }
     return this.request(endpoint, queryParams, headers, options)
   }
   patch(
     endpoint: string,
     queryParams: QueryParameters,
-    data: unknown = {},
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    data: unknown,
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
-    options = { ...options, method: "PATCH", body: JSON.stringify(data) }
+    options = {
+      ...options,
+      method: "PATCH",
+      // Temporary cast conversion as RequestInfo doesn't accept strings as type
+      body: JSON.stringify(data) as unknown as ReadableStream<Uint8Array>,
+    }
     return this.request(endpoint, queryParams, headers, options)
   }
   delete(
     endpoint: string,
     queryParams: QueryParameters,
     headers: Headers,
-    options: QueryParameters = { concurrentQueue: false }
+    options: BaseAPIRequestOptions = { concurrentQueue: false }
   ) {
     options = { ...options, method: "DELETE" }
     return this.request(endpoint, queryParams, headers, options)
@@ -200,9 +220,8 @@ export class BaseApi {
       return apiParams
     }, {})
   }
-  getAuthHeader(requestOptions: QueryParameters) {
-    // const accessToken = getAccessToken()
-    console.log(requestOptions)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  getAuthHeader(requestOptions: Partial<Request>) {
     return {
       Authorization: "Auth",
     }

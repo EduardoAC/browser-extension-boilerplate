@@ -7,7 +7,6 @@ describe("sendMessage", () => {
     const message: Message = { type: "counter", subType: "get" }
     const response: MessageResponse = { statusCode: 200, data: 2 }
 
-    console.log(chrome.runtime)
     chrome.runtime.sendMessage.mockImplementation(
       (_message: any, callback: any): void => {
         callback(response)
