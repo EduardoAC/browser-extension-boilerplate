@@ -2,22 +2,11 @@ import { ApiError } from "./ApiError.class"
 import {
   ConcurrentRequestQueue,
   ConcurrentRequestQueueConfig,
-} from "./ConcurrentRequestQueue"
-
-type Parameter = string[] | string | number | boolean | null
-
-interface QueryParameters {
-  [key: string]: Parameter
-}
+} from "../utils/ConcurrentRequestQueue"
+import { Parameter, QueryParameters } from "../types/request.types"
 
 interface BaseAPIRequestOptions extends Partial<Request> {
   concurrentQueue?: boolean
-}
-
-interface MappingAPIParam {
-  apiName: string
-  valueMapFn(param: Parameter): Parameter
-  removeEmpty: boolean
 }
 
 interface Headers {
@@ -272,42 +261,7 @@ export class BaseApi {
     }
     return url.toString()
   }
-  /**
-   * Maps query parameters to API names based on the provided mapping configuration.
-   * @param params The query parameters to map.
-   * @param mapping The mapping configuration for parameter names.
-   * @returns The mapped query parameters.
-   * @throws Error if the mapping configuration is invalid.
-   */
-  mapParamsToApiNames(
-    params: QueryParameters = {},
-    mapping: { [key: string]: MappingAPIParam }
-  ) {
-    const emptyValues: Parameter[] = ["", null]
-    return Object.keys(mapping).reduce((apiParams: QueryParameters, key) => {
-      const cfg = mapping[key]
-      if (!params[key]) {
-        return apiParams
-      }
 
-      const apiParamKey = cfg.apiName || key
-      let apiParamValue = params[key]
-      const hasEmptyValue = emptyValues.includes(apiParamValue)
-
-      if (!cfg.removeEmpty || (cfg.removeEmpty && !hasEmptyValue)) {
-        if (cfg.valueMapFn) {
-          if (typeof cfg.valueMapFn !== "function") {
-            throw new Error(
-              `Expected valueMapFn to be a function in ${key} mapping config`
-            )
-          }
-          apiParamValue = cfg.valueMapFn(apiParamValue)
-        }
-        apiParams[apiParamKey] = apiParamValue
-      }
-      return apiParams
-    }, {})
-  }
   /**
    * Retrieves authentication headers based on the provided request options.
    * @param requestOptions The request options.

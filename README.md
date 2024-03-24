@@ -26,9 +26,9 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 
 ## Tech debt to address
 
-- [ ] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
-- [ ] Base.api.ts is a bit big and serve multiple purposes, revisit the file and consider extract functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit test it.
-- [ ] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
-- [ ] Base.api.ts is a bit big and serves multiple purposes
-  - [ ] Revisit the file and consider extracting functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit tested.
-  - [ ] Clear parameters part, it's not elegant to have to pass `{}` when we don't require additional query parameters and headers
+- [x] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
+- [x] Base.api.ts is a bit big and serve multiple purposes, revisit the file and consider extract functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit test it.
+- [x] concurrentQueue.ts is a series of functions that handle the queue but needs an elegant and reusable interface. Revisit this file and create a cleaner implementation using Classes or Prototyping TBD.
+- [x] Base.api.ts is a bit big and serves multiple purposes
+  - [x] Revisit the file and consider extracting functionality like `mapParamsToApiNames` and `concurrent `concurrentRequests` so it can be better unit tested.
+  - [x] Clear parameters part, it's not elegant to have to pass `{}` when we don't require additional query parameters and headers
