@@ -6,10 +6,10 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 
 - [x] Basic Message handling
 - [ ] Basic Error handling
-- [ ] Advance API service, including the following features
-  - [ ] Concurrency handler with Error handler
+- [x] Advance API service, including the following features
+  - [x] Concurrency handler with Error handler
   - [ ] Support for authentication through headers
-  - [ ] Wrapper around fetch method to simplify usage GET, PUT, POST and DELETE
+  - [x] Wrapper around fetch method to simplify usage GET, PUT, POST and DELETE
   - [ ] Support for streaming requests
 - [ ] Support for Single Sign-On through cookies
 - [ ] CSS modules injection into React Shadow
