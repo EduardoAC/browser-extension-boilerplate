@@ -1,10 +1,8 @@
 import { ApiError } from "./ApiError.class"
 import {
-  hasOnGoingRequests,
-  lockResourceByUrl,
-  notifyOnGoingRequestQueued,
-  waitUntilOnGoingRequestFinish,
-} from "./concurrentQueue"
+  ConcurrentRequestQueue,
+  ConcurrentRequestQueueConfig,
+} from "./ConcurrentRequestQueue"
 
 type Parameter = string[] | string | number | boolean | null
 
@@ -28,7 +26,11 @@ interface Headers {
 
 export class BaseApi {
   protected defaultOptions = {}
-  constructor() {}
+  protected concurrentRequestQueue: ConcurrentRequestQueue
+
+  constructor(config: ConcurrentRequestQueueConfig = { timeoutMs: 5000 }) {
+    this.concurrentRequestQueue = new ConcurrentRequestQueue(config)
+  }
   protected onRequestFailed(response: Response) {
     const isUnauthenticated = response.status === 401
     const isUnauthorised = response.status === 403
@@ -43,22 +45,36 @@ export class BaseApi {
 
     return new ApiError("Unknown API Error", response)
   }
+  /**
+   * Performs a concurrent request using the provided URL, headers, and request options.
+   * Queues the request if there are ongoing requests for the same URL.
+   * @param requestUrl The URL to make the request to.
+   * @param headers The headers to include in the request.
+   * @param reqOptions The request options.
+   * @returns A Promise resolving to the response object.
+   */
   protected async concurrentRequests(
     requestUrl: string,
     headers: Headers,
     reqOptions: Partial<Request>
   ) {
     let response: Response
-    if (!hasOnGoingRequests(requestUrl)) {
-      lockResourceByUrl(requestUrl)
+    if (!this.concurrentRequestQueue.hasOnGoingRequests(requestUrl)) {
+      this.concurrentRequestQueue.lockResourceByUrl(requestUrl)
       const authHeaders = this.getAuthHeader(reqOptions)
       response = await fetch(requestUrl, {
         ...reqOptions,
         headers: { ...authHeaders, source: "browser-extension", ...headers },
       })
-      notifyOnGoingRequestQueued(requestUrl, response)
+      this.concurrentRequestQueue.notifyOnGoingRequestQueued(
+        requestUrl,
+        response
+      )
     } else {
-      response = await waitUntilOnGoingRequestFinish(requestUrl)
+      response =
+        await this.concurrentRequestQueue.waitUntilOnGoingRequestFinish(
+          requestUrl
+        )
     }
     return response
   }

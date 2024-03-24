@@ -4,6 +4,7 @@ import { BaseApi } from "./base.api"
 
 const fetchMocker = createFetchMock(vi)
 const requestUrl = "http://www.url.com"
+
 describe("Base Api", () => {
   beforeAll(() => {
     fetchMocker.enableMocks()
