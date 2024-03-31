@@ -1,17 +1,18 @@
 import { appRootId } from "../constants"
 
-function attachStyleToShadowDom(shadowWrapper: ShadowRoot, cssContent: string) {
+function attachStyleToShadowDom(shadowWrapper: ShadowRoot, cssURL: string) {
   // create variable to attach the tailwind stylesheet
-  const style = document.createElement("style")
+  const link = document.createElement("link")
 
   // attach the stylesheet as text
-  style.textContent = cssContent
+  link.rel = "stylesheet"
+  link.href = cssURL
 
   // apply the style
-  shadowWrapper.appendChild(style)
+  shadowWrapper.appendChild(link)
 }
 
-export function createShadowRoot(root: Element, styles: string) {
+export function createShadowRoot(root: Element, cssURL: string) {
   // Set shadow root inside of root element
   const shadowRoot = root.attachShadow({ mode: "open" })
   root.appendChild(shadowRoot)
@@ -19,6 +20,6 @@ export function createShadowRoot(root: Element, styles: string) {
   const rootIntoShadow = document.createElement("div")
   rootIntoShadow.id = appRootId
   shadowRoot.appendChild(rootIntoShadow)
-  attachStyleToShadowDom(shadowRoot, styles)
+  attachStyleToShadowDom(shadowRoot, cssURL)
   return rootIntoShadow
 }
