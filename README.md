@@ -12,7 +12,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
   - [x] Wrapper around fetch method to simplify usage GET, PUT, POST and DELETE
   - [ ] Support for streaming requests
 - [ ] Support for Single Sign-On through cookies
-- [ ] CSS modules injection into React Shadow
+- [x] CSS injection into React Shadow
 - [x] Support testing using Vitest
 - and much more
 
@@ -22,7 +22,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 - [x] Setup deployment and HMR in extension - using CXRJS
 - [x] Load React in Content Script considering there is not index.html
 - [x] Introduce Shadow dom and styles for the component
-- [ ] Global styles to use within every page (Not required)
+- [x] Global styles to use within every page (Not required)
 
 ## Tech debt to address
 

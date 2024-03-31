@@ -264,11 +264,11 @@ export class BaseApi {
 
   /**
    * Retrieves authentication headers based on the provided request options.
-   * @param requestOptions The request options.
+   * @param _requestOptions The request options.
    * @returns The authentication headers.
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getAuthHeader(requestOptions: Partial<Request>) {
+  getAuthHeader(_requestOptions: Partial<Request>) {
     return {
       Authorization: "Auth",
     }
