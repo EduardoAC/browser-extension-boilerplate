@@ -5,8 +5,10 @@ import {
 } from "../utils/ConcurrentRequestQueue"
 import { Parameter, QueryParameters } from "../types/request.types"
 
+type RequestType = "stream" | "json"
 interface BaseAPIRequestOptions extends Partial<Request> {
   concurrentQueue?: boolean
+  requestType: RequestType
 }
 
 interface Headers {
@@ -99,6 +101,34 @@ export class BaseApi {
       )
     }
   }
+
+  protected async handleResponse(response: Response, requestType: RequestType) {
+    try {
+      if (!response.ok) {
+        return Promise.reject(this.onRequestFailed(response))
+      }
+
+      let data
+      if (requestType === "json") {
+        data = await response.json()
+      } else if (requestType === "stream") {
+      } else {
+        throw new Error(`Request type unknown: ${requestType}`)
+      }
+
+      return Promise.resolve({
+        status: response.status,
+        data: data,
+      })
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error instanceof ApiError) {
+        return Promise.reject(error)
+      }
+      throw new Error(error)
+    }
+  }
+
   /**
    * Makes an API request to the specified endpoint with optional query parameters and headers.
    * @param endpoint The endpoint to make the request to.
@@ -114,9 +144,9 @@ export class BaseApi {
     const {
       queryParams = {},
       headers = {},
-      options = { concurrentQueue: false },
+      options = { concurrentQueue: false, requestType: "json" },
     } = requestOptions
-    const { concurrentQueue, ...customOptions } = options
+    const { concurrentQueue, requestType, ...customOptions } = options
     const updatedOptions = { ...this.defaultOptions, ...customOptions }
 
     try {
@@ -131,16 +161,8 @@ export class BaseApi {
       } else {
         response = await this.fetch(requestUrl, headers, updatedOptions)
       }
-      if (!response.ok) {
-        return Promise.reject(this.onRequestFailed(response))
-      }
 
-      const data = await response.json()
-
-      return Promise.resolve({
-        status: response.status,
-        data: data,
-      })
+      return this.handleResponse(response, requestType)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error instanceof ApiError) {

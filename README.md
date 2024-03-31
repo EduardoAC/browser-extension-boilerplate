@@ -10,7 +10,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
   - [x] Concurrency handler with Error handler
   - [ ] Support for authentication through headers
   - [x] Wrapper around fetch method to simplify usage GET, PUT, POST and DELETE
-  - [ ] Support for streaming requests
+  - [x] Support for streaming requests (Caveat we wait for the whole stream to finish fetching)
 - [ ] Support for Single Sign-On through cookies
 - [x] CSS injection into React Shadow
 - [x] Support testing using Vitest
