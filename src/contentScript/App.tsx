@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import reactLogo from "@assets/react.svg"
-import styles from "./App.css?inline"
+import "./App.css"
 import { sendMessage } from "./messages/sendMessage"
 
 function App() {
@@ -27,7 +27,6 @@ function App() {
 
   return (
     <>
-      <style>{styles}</style>
       <div className="chrome-extension-boilerplate">
         <a href="https://react.dev" target="_blank">
           <img
