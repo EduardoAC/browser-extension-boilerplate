@@ -8,7 +8,7 @@ import { Parameter, QueryParameters } from "../types/request.types"
 type RequestType = "stream" | "json"
 interface BaseAPIRequestOptions extends Partial<Request> {
   concurrentQueue?: boolean
-  requestType: RequestType
+  requestType?: RequestType
 }
 
 interface Headers {
@@ -22,12 +22,21 @@ interface RequestOptions {
   options?: BaseAPIRequestOptions
 }
 
+interface InternalRequestOptions {
+  headers: Headers
+  queryParams: QueryParameters
+  options: BaseAPIRequestOptions
+}
+
 /**
  * Base API class for making HTTP requests with support for concurrent requests and error handling.
  */
 export class BaseApi {
   // Default options for the API requests.
-  protected defaultOptions = {}
+  protected defaultOptions: BaseAPIRequestOptions = {
+    concurrentQueue: false,
+    requestType: "json",
+  }
   //Concurrent request queue for managing concurrent requests.
   protected concurrentRequestQueue: ConcurrentRequestQueue
   /**
@@ -112,6 +121,9 @@ export class BaseApi {
       if (requestType === "json") {
         data = await response.json()
       } else if (requestType === "stream") {
+        // Keep in mind that this will wait for the whole response to arrive before continuing the flow.
+        // For continuous parsing, consider using [Readable Streams](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams) as an alternative.
+        data = await response.arrayBuffer()
       } else {
         throw new Error(`Request type unknown: ${requestType}`)
       }
@@ -137,17 +149,18 @@ export class BaseApi {
    * @param options Additional request options.
    * @returns A Promise resolving to the response data.
    */
-  protected async request(
-    endpoint: string,
-    requestOptions: RequestOptions = {}
-  ) {
-    const {
-      queryParams = {},
-      headers = {},
-      options = { concurrentQueue: false, requestType: "json" },
-    } = requestOptions
-    const { concurrentQueue, requestType, ...customOptions } = options
-    const updatedOptions = { ...this.defaultOptions, ...customOptions }
+  protected async request(endpoint: string, requestOptions?: RequestOptions) {
+    // Populate missing options with defaults if requestOptions is undefined
+    const internalRequestOptions: InternalRequestOptions = {
+      queryParams: requestOptions?.queryParams || {},
+      headers: requestOptions?.headers || {},
+      options: {
+        ...this.defaultOptions,
+        ...(requestOptions?.options || {}),
+      },
+    }
+    const { queryParams, headers, options } = internalRequestOptions
+    const { concurrentQueue, requestType, ...updatedOptions } = options
 
     try {
       const requestUrl = this.generateUrl(endpoint, queryParams)
@@ -248,7 +261,7 @@ export class BaseApi {
    */
   delete(endpoint: string, requestOptions?: RequestOptions) {
     const { queryParams, headers, options } = requestOptions || {}
-    const updatedOptions = {
+    const updatedOptions: BaseAPIRequestOptions = {
       ...options,
       method: "DELETE",
     }

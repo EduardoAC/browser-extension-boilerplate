@@ -14,6 +14,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 - [ ] Support for Single Sign-On through cookies
 - [x] CSS injection into React Shadow
 - [x] Support testing using Vitest
+- [ ] Add acceptance tests using puppeteer (Puppeteer over playwright for more API control)
 - and much more
 
 ## Additional Notes
