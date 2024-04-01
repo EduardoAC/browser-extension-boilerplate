@@ -106,6 +106,48 @@ describe("Base Api", () => {
         method: "DELETE",
       })
     })
+    it("should handle json response correctly", async () => {
+      const responseData = { data: "12345" }
+      fetchMocker.mockResponseOnce(JSON.stringify(responseData))
+      const baseApiInstance = new BaseApi()
+      const response = await baseApiInstance.get(requestUrl, {
+        options: { requestType: "json" },
+      })
+      expect(response).toEqual({
+        status: 200,
+        data: responseData,
+      })
+    })
+
+    it("should handle stream response correctly", async () => {
+      const responseData = "Stream Data"
+      const responseInit = {
+        status: 200,
+        headers: { "Content-Type": "text/plain" },
+      }
+      const sharedResponse = new Response(responseData, responseInit)
+      fetchMocker.mockImplementation(() => Promise.resolve(sharedResponse))
+      const baseApiInstance = new BaseApi()
+      const response = await baseApiInstance.get(requestUrl, {
+        options: { requestType: "stream" },
+      })
+      const textEncoder = new TextEncoder()
+      // Assuming response.data will be ArrayBuffer in this case
+      expect(response).toStrictEqual({
+        status: 200,
+        data: new Uint8Array(textEncoder.encode(responseData)),
+      })
+    })
+
+    it("should throw error for unknown request type", async () => {
+      const baseApiInstance = new BaseApi()
+      const invalidRequestType = "invalidType"
+      await expect(async () => {
+        await baseApiInstance.get(requestUrl, {
+          options: { requestType: invalidRequestType },
+        })
+      }).rejects.toThrow(`Request type unknown: ${invalidRequestType}`)
+    })
   })
   describe("Concurrency queue", () => {
     it("should queue requests using the same URL until the first has finished and broadcast the result to all", async () => {

@@ -124,6 +124,8 @@ export class BaseApi {
         // Keep in mind that this will wait for the whole response to arrive before continuing the flow.
         // For continuous parsing, consider using [Readable Streams](https://developer.mozilla.org/en-US/docs/Web/API/Streams_API/Using_readable_streams) as an alternative.
         data = await response.arrayBuffer()
+        // Convert ArrayBuffer to Uint8Array
+        data = new Uint8Array(data)
       } else {
         throw new Error(`Request type unknown: ${requestType}`)
       }
