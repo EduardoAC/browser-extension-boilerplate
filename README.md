@@ -16,6 +16,7 @@ Now that the disclosure is complete, this project aims to offer an easy way to c
 - [x] Support testing using Vitest
 - [ ] Add acceptance tests using puppeteer (Puppeteer over playwright for more API control)
 - [ ] Setup GitHub actions for CI
+- [ ] Setup Static Analysing (Perhaps Prettier + Husky + ESLint)
 - and much more
 
 ## Additional Notes
