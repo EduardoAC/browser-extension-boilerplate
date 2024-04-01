@@ -7,8 +7,8 @@ import { Parameter, QueryParameters } from "../types/request.types"
 
 type RequestType = "stream" | "json"
 interface BaseAPIRequestOptions extends Partial<Request> {
-  concurrentQueue?: boolean
-  requestType?: RequestType
+  concurrentQueue: boolean
+  requestType: RequestType
 }
 
 interface Headers {
@@ -19,7 +19,7 @@ interface RequestOptions {
   headers?: Headers
   queryParams?: QueryParameters
   body?: unknown
-  options?: BaseAPIRequestOptions
+  options?: Partial<BaseAPIRequestOptions>
 }
 
 interface InternalRequestOptions {
@@ -263,7 +263,7 @@ export class BaseApi {
    */
   delete(endpoint: string, requestOptions?: RequestOptions) {
     const { queryParams, headers, options } = requestOptions || {}
-    const updatedOptions: BaseAPIRequestOptions = {
+    const updatedOptions = {
       ...options,
       method: "DELETE",
     }
