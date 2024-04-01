@@ -10,23 +10,23 @@ const assetsDir = resolve(root, "assets")
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), crx({ manifest }), css({ output: "bundle.css" })],
-  resolve: {
-    alias: {
-      "@src": root,
-      "@assets": assetsDir,
+    plugins: [react(), crx({ manifest }), css({ output: "bundle.css" })],
+    resolve: {
+        alias: {
+            "@src": root,
+            "@assets": assetsDir,
+        },
     },
-  },
-  test: {
-    // some paths to the files that are test files
-    include: ["./**/*.test.ts", "./**/*.test.tsx"],
-    globals: true,
-    environment: "jsdom",
-    setupFiles: ["./setupTests.ts"],
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      sourcemap: "inline",
+    test: {
+        // some paths to the files that are test files
+        include: ["./**/*.test.ts", "./**/*.test.tsx"],
+        globals: true,
+        environment: "jsdom",
+        setupFiles: ["./setupTests.ts"],
     },
-  },
+    optimizeDeps: {
+        esbuildOptions: {
+            sourcemap: "inline",
+        },
+    },
 })
