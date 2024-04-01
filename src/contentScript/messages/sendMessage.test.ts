@@ -3,22 +3,22 @@
 import { sendMessage } from "./sendMessage"
 
 describe("sendMessage", () => {
-  it("should send the message correctly", async () => {
-    const message: Message = { type: "counter", subType: "get" }
-    const response: MessageResponse = { statusCode: 200, data: 2 }
+    it("should send the message correctly", async () => {
+        const message: Message = { type: "counter", subType: "get" }
+        const response: MessageResponse = { statusCode: 200, data: 2 }
 
-    chrome.runtime.sendMessage.mockImplementation(
-      (_message: any, callback: any): void => {
-        callback(response)
-      }
-    )
+        chrome.runtime.sendMessage.mockImplementation(
+            (_message: any, callback: any): void => {
+                callback(response)
+            },
+        )
 
-    const promiseResult = await sendMessage(message)
+        const promiseResult = await sendMessage(message)
 
-    expect(promiseResult).toEqual(2)
-    expect(chrome.runtime.sendMessage).toBeCalledWith(
-      message,
-      expect.any(Function)
-    )
-  })
+        expect(promiseResult).toEqual(2)
+        expect(chrome.runtime.sendMessage).toBeCalledWith(
+            message,
+            expect.any(Function),
+        )
+    })
 })

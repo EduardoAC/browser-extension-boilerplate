@@ -1,5 +1,5 @@
 import { messageHandler } from "./eventHandler"
 
 export function initialiseEvents() {
-  chrome.runtime.onMessage.addListener(messageHandler)
+    chrome.runtime.onMessage.addListener(messageHandler)
 }
