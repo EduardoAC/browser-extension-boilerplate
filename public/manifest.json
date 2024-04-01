@@ -18,5 +18,11 @@
       "js": ["./src/contentScript/contentScript.tsx"],
       "matches": ["<all_urls>"]
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["bundle.css"],
+      "matches": ["<all_urls>"]
+    }
   ]
 }
